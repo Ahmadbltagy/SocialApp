@@ -4,9 +4,9 @@ using SocialApp.API.Data;
 
 namespace SocialApp.API.Controllers
 {
-    [ApiController]
     [Route("api/[controller]")]
-    public class ValuesController : Controller
+    [ApiController]
+    public class ValuesController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
         public ValuesController(ApplicationDbContext context)
