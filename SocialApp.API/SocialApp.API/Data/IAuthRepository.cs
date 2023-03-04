@@ -1,4 +1,5 @@
 ﻿using SocialApp.API.Models;
+
 namespace SocialApp.API.Data
 {
     public interface IAuthRepository

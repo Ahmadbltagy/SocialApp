@@ -15,13 +15,15 @@ namespace SocialApp.API.Data
         {
             var user = await _context.Users.FirstOrDefaultAsync(x => x.Username == username);
             if (user == null) return null;
-            if (!VerifyPasswordHash(ref password,  user.PasswordHash,  user.PasswordSalt)) return null;
 
+            if (!VerifyPasswordHash(ref password,  user.PasswordHash,  user.PasswordSalt)) return null;
+            
             return user;
         }
 
         private bool VerifyPasswordHash(ref string password,  byte[] passwordHash, byte[] passwordSalt)
         {
+            //using function to dispose every thing inside it after finished
             using(var hmac = new System.Security.Cryptography.HMACSHA512(passwordSalt))
             {
                 var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
@@ -37,19 +39,25 @@ namespace SocialApp.API.Data
         public async Task<User> Register(User user, string password)
         {
             byte[] passwordHash, passwordSalt;
+            
             CreatePasswordHash(ref password, out passwordHash, out passwordSalt);
+            
             user.PasswordHash = passwordHash;
             user.PasswordSalt = passwordSalt;
+            
             await _context.Users.AddAsync(user);
             await _context.SaveChangesAsync();
 
             return user;
         }
+
         private void CreatePasswordHash(ref string password, out byte[] PasswordHash, out byte[] passwordSalt)
         {
+            //Used using to dispose every things inside after finished
             using(var hmac = new System.Security.Cryptography.HMACSHA512())
             {
                 passwordSalt = hmac.Key;
+                //CoumputeHash take a byte[] so convert pass to a byte of array to Hash it 
                 PasswordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
 
             }
