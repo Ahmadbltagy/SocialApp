@@ -4,10 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
+
 using SocialApp.API.Data;
 
 namespace SocialApp.API.Controllers
-{
+{   
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class ValuesController : ControllerBase
@@ -23,6 +26,7 @@ namespace SocialApp.API.Controllers
             return Ok(values);
         }
         
+        [AllowAnonymous]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetValue(int id){
             var value = await _context.Values.FirstOrDefaultAsync(v=>v.Id == id);
