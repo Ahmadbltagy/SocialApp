@@ -10,7 +10,7 @@ using SocialApp.API.Data;
 
 namespace SocialApp.API.Controllers
 {   
-    [Authorize]
+    // [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class ValuesController : ControllerBase
@@ -26,7 +26,7 @@ namespace SocialApp.API.Controllers
             return Ok(values);
         }
         
-        [AllowAnonymous]
+        // [AllowAnonymous]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetValue(int id){
             var value = await _context.Values.FirstOrDefaultAsync(v=>v.Id == id);
