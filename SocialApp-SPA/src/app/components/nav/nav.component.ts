@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AlertifyService } from 'src/app/services/alertify.service';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
@@ -6,32 +7,39 @@ import { AuthService } from 'src/app/services/auth.service';
   templateUrl: './nav.component.html',
   styleUrls: ['./nav.component.css'],
 })
-export class NavComponent implements OnInit {
+export class NavComponent {
   model: {
     username: string;
     password: string;
   };
-  constructor(private _authService: AuthService) {
+  userName = '';
+
+  constructor(
+    private _authService: AuthService,
+    private _alertifyService: AlertifyService
+  ) {
     this.model = {
       username: '',
       password: '',
     };
   }
-  ngOnInit() {}
 
   login() {
     this._authService.login(this.model).subscribe({
-      next: (res) => console.log(`Successful login ${res}`),
-      error: (err) => console.log(`Failed to login ${err}`),
+      next: (res) => {
+        this._alertifyService.success(`Login successfully`);
+        this.userName = this._authService.decodedToken?.unique_name;
+      },
+      error: (err) => this._alertifyService.error(`Failed to login`),
     });
   }
 
   loggedIn() {
-    const token = localStorage.getItem('Token');
-    return !!token; //!! will return true if there is a token and false if not
+    return this._authService.loggedIn();
   }
+
   logOut() {
     localStorage.removeItem('Token');
-    console.log('logged Out');
+    this._alertifyService.message('logged Out');
   }
 }
