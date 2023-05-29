@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { AlertifyService } from 'src/app/services/alertify.service';
 import { AuthService } from 'src/app/services/auth.service';
 
@@ -16,7 +17,8 @@ export class NavComponent {
 
   constructor(
     private _authService: AuthService,
-    private _alertifyService: AlertifyService
+    private _alertifyService: AlertifyService,
+    private _router: Router
   ) {
     this.model = {
       username: '',
@@ -31,6 +33,7 @@ export class NavComponent {
         this.userName = this._authService.decodedToken?.unique_name;
       },
       error: (err) => this._alertifyService.error(`Failed to login`),
+      complete: () => this._router.navigate(['/members']),
     });
   }
 
@@ -41,5 +44,6 @@ export class NavComponent {
   logOut() {
     localStorage.removeItem('Token');
     this._alertifyService.message('logged Out');
+    this._router.navigate(['/home']);
   }
 }
